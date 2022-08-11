@@ -76,7 +76,13 @@ abstract class ArrayObject
     private function assignCustom(string $name, ReflectionNamedType $type)
     {
         $className = $type->getName();
-        $this->{$name} = Generator::generate($className, $this->getValueByName($name));
+        $value = $this->getValueByName($name);
+
+        if ($value instanceof ArrayObject) {
+            $this->{$name} = $value;
+        } else {
+            $this->{$name} = Generator::generate($className, $value);
+        }
     }
 
     private function isPropertyToAssign(string $name): bool
